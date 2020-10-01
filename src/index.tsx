@@ -4,9 +4,16 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import { createDriver, Neo4jContext } from './neo4j/index'
+
+const driver = createDriver('bolt', 'localhost', 7687, 'neo4j', 'neo')
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* Can we do this automagically? */}
+    <Neo4jContext.Provider value={{ driver }}>
+      <App />
+    </Neo4jContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

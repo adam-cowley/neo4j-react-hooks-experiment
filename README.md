@@ -1,44 +1,72 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Experiments with React Hooks
 
-## Available Scripts
+> How can we make interacting with Neo4j directly through Cypher simpler in a React component?  Eg. for Graph Apps
 
-In the project directory, you can run:
 
-### `yarn start`
+## Context & Provider
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```tsx
+import { createDriver, Neo4jContext } from './neo4j'
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+// Helper function for creating a driver (no more `neo4j.driver(uri, neo4j.auth.basic(username, password))`)
+const driver = createDriver('bolt', 'localhost', 7687, 'neo4j', 'neo')
 
-### `yarn test`
+ReactDOM.render(
+  <React.StrictMode>
+    {/* Can we do this automagically? */}
+    <Neo4jContext.Provider value={{ driver }}>
+      <App />
+    </Neo4jContext.Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## `useCypher{Read|Write}` Hooks
 
-### `yarn build`
+```tsx
+function Component() {
+  const { loading, first, cypher } = useCypherRead('MATCH (n) RETURN count(n) AS count')
+  const count = first && first.get('count').toNumber()
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  return (
+    <div>
+        { loading && <p>Loading...</p> }
+        { !loading && <p>There are {count} nodes in the database</p> }
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+        <pre>{cypher}</pre>
+    </div>
+  );
+}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+State:
+```
+export interface Neo4jResultState {
+    cypher: string;
+    params?: Record<string, any>;
+    database?: string;
 
-### `yarn eject`
+    // Is query loading?
+    loading: boolean;
+    error?: Error;
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    // Access result for summary etc...
+    result?: Result
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    // All records
+    records?: Neo4jRecord[],
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    // Make it easy to get the first record
+    first?: Neo4jRecord,
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+}
+```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## TODO
+
+- Login Forms?
+  - Login Form component - scheme, host, port, username, password?
+  - Set credentials & driver - create a new driver on the fly?
