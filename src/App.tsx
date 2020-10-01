@@ -8,8 +8,6 @@ function App() {
   const { loading, first, cypher } = useCypherRead('MATCH (n) RETURN count(n) AS count')
   const count = first && first.get('count').toNumber()
 
-
-
   return (
     <div className="App">
       <header className="App-header">

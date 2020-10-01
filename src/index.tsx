@@ -1,19 +1,27 @@
+/* eslint-disable */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import { createDriver, Neo4jContext } from './neo4j/index'
+// import { createDriver, createNeo4jContext, Neo4jContext } from './neo4j/index'
 
-const driver = createDriver('bolt', 'localhost', 7687, 'neo4j', 'neo')
+// const driver = createDriver('bolt', 'localhost', 7687, 'neo4j', 'neo')
+
+// const Neo4jApp = createNeo4jContext('bolt', 'localhost', 7687, 'neo4j', 'neo')
+
+import Neo4jAppProvider from './neo4j/app'
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* Can we do this automagically? */}
-    <Neo4jContext.Provider value={{ driver }}>
+    <Neo4jAppProvider host="foo">
+      {/* <div>hi</div> */}
       <App />
-    </Neo4jContext.Provider>
+    </Neo4jAppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

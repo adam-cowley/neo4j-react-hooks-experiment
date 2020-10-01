@@ -3,6 +3,34 @@
 > How can we make interacting with Neo4j directly through Cypher simpler in a React component?  Eg. for Graph Apps
 
 
+## Provider Function
+
+If a `driver` is passed through as a prop then use it to create the context.
+
+Otherwise display a login form and if supplied default the following values into the form:
+- `scheme`
+- `host`
+- `port`
+- `username`
+- `password`
+- `database`
+
+
+
+```tsx
+import { Neo4jAppProvider } from './neo4j'
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Neo4jAppProvider host="foo" password="bar">
+      {/* <div>hi</div> */}
+      <App />
+    </Neo4jAppProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
 ## Context & Provider
 
 ```tsx

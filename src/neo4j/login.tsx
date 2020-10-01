@@ -1,0 +1,60 @@
+import React, { useState } from 'react'
+
+import { schemes } from './index'
+
+export default function LoginForm({ error, onSubmit, ...props }) {
+    const [scheme, setScheme] = useState('neo4j')
+    const [host, setHost] = useState(props.host || 'localhost')
+    const [port, setPort] = useState(props.port || 7687)
+    const [username, setUsername] = useState(props.username || 'neo4j')
+    const [password, setPassword] = useState(props.password || 'neo')
+    const [database, setDatabase] = useState(props.database)
+
+    const handleSubmit = e => {
+        e.preventDefault()
+
+        onSubmit({ scheme, host, port, username, password })
+    }
+
+    return (
+        <form onSubmit={handleSubmit}>
+            {error && (<div className="error">{error.message}</div>)}
+            <div>
+                <label htmlFor="scheme">Scheme</label>
+                <select id="scheme" onChange={e => setScheme(e.currentTarget.value)}>
+                    {schemes.map(scheme => (<option key={scheme} value={scheme}>
+                        {scheme}
+                    </option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <label htmlFor="host">Host</label>
+                <input id="host" type="text" value={host} onChange={e => setHost(e.target.value)} />
+            </div>
+            <div>
+                <label htmlFor="port">Port</label>
+                <input id="port" type="number" value={port} onChange={e => setPort(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="username">Username</label>
+                <input id="username" type="text" value={username} onChange={e => setUsername(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="password">Password</label>
+                <input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="database">Database</label>
+                <input placeholder="(default)" id="database" type="text" value={database} onChange={e => setDatabase(e.target.value)} />
+            </div>
+
+            <div>
+                <input type="submit" value="Connect to Neo4j"/>
+            </div>
+        </form>
+    )
+}

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import neo4j, { Driver, QueryResult, Record as Neo4jRecord, Result } from "neo4j-driver";
 
 export type Neo4jScheme = 'neo4j' | 'neo4j+s' | 'neo4j+scc' | 'bolt' | 'bolt+s' | 'bolt+scc'
@@ -14,9 +14,8 @@ export interface Neo4jConfig {
 
 export interface Neo4jContextState {
     config: Neo4jConfig;
-    driver: Driver;
     database?: string;
-
+    driver: Driver;
 }
 
 export interface Neo4jResultState {
@@ -32,7 +31,7 @@ export interface Neo4jResultState {
 
 export const schemes: Neo4jScheme[] = ['neo4j', 'neo4j+s', 'neo4j+scc', 'bolt', 'bolt+s', 'bolt+scc']
 
-export const Neo4jContext = createContext()
+export const Neo4jContext = createContext({})
 
 export const createDriver = (scheme: Neo4jScheme, host: string, port: string | number, username: string, password: string) => {
     return neo4j.driver(`${scheme}://${host}:${port}`, neo4j.auth.basic(username, password))
@@ -83,3 +82,17 @@ export const useCypher = (defaultAccessMode: string, cypher: string, params?: Re
 
 export const useCypherRead = (cypher: string, params?: Record<string, any>, database?: string) => useCypher(neo4j.session.READ, cypher, params, database)
 export const useCypherWrite = (cypher: string, params?: Record<string, any>, database?: string) => useCypher(neo4j.session.WRITE, cypher, params, database)
+
+export const createNeo4jContext = (scheme: Neo4jScheme, host: string, port: string | number, username: string, password: string, database?: string) => {
+    const driver = createDriver(scheme, host, port, username, password)
+    const config = { scheme, host, port, username, password, database } as Neo4jConfig
+
+    return ({ children }) => {
+        return (
+            <Neo4jContext.Provider value={{ driver, config }}>
+                {children}
+            </Neo4jContext.Provider>
+        )
+    }
+}
+
