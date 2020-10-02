@@ -1,8 +1,19 @@
 import React, { useState } from 'react'
 
-import { schemes } from './index'
+import { Neo4jScheme, Neo4jConfig, schemes } from './index'
 
-export default function LoginForm({ error, onSubmit, ...props }) {
+
+interface LoginProps {
+    error?: Error;
+    onSubmit: (config: Neo4jConfig) => void;
+    scheme?: Neo4jScheme;
+    host?: string;
+    port?: string | number;
+    username?: string;
+    password?: string;
+}
+
+export const LoginForm: React.FC<LoginProps> = ({ error, onSubmit, ...props }) => {
     const [scheme, setScheme] = useState('neo4j')
     const [host, setHost] = useState(props.host || 'localhost')
     const [port, setPort] = useState(props.port || 7687)

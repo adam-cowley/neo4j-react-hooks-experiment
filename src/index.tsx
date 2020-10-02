@@ -11,17 +11,15 @@ import * as serviceWorker from './serviceWorker';
 
 // const Neo4jApp = createNeo4jContext('bolt', 'localhost', 7687, 'neo4j', 'neo')
 
-import Neo4jAppProvider from './neo4j/app'
-
-
+import { Neo4jProvider } from './neo4j/app'
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Neo4jAppProvider host="foo">
+    <Neo4jProvider host="foo">
       {/* <div>hi</div> */}
       <App />
-    </Neo4jAppProvider>
+    </Neo4jProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import neo4j, { Driver, QueryResult, Record as Neo4jRecord, Result } from "neo4j-driver";
 
 export type Neo4jScheme = 'neo4j' | 'neo4j+s' | 'neo4j+scc' | 'bolt' | 'bolt+s' | 'bolt+scc'
@@ -37,7 +37,7 @@ export const createDriver = (scheme: Neo4jScheme, host: string, port: string | n
     return neo4j.driver(`${scheme}://${host}:${port}`, neo4j.auth.basic(username, password))
 }
 
-export const useCypher = (defaultAccessMode: string, cypher: string, params?: Record<string, any>, database?: string) => {
+export const useCypher = (defaultAccessMode: string, cypher: string, params?: Record<string, any>, database?: string) : Neo4jResultState => {
     const { driver } = useContext(Neo4jContext)
 
     if ( !driver ) throw new Error('`driver` not defined. Have you added it into your app as <Neo4jContext.Provider value={{driver}}> ?')
@@ -80,19 +80,5 @@ export const useCypher = (defaultAccessMode: string, cypher: string, params?: Re
     return queryState
 }
 
-export const useCypherRead = (cypher: string, params?: Record<string, any>, database?: string) => useCypher(neo4j.session.READ, cypher, params, database)
-export const useCypherWrite = (cypher: string, params?: Record<string, any>, database?: string) => useCypher(neo4j.session.WRITE, cypher, params, database)
-
-export const createNeo4jContext = (scheme: Neo4jScheme, host: string, port: string | number, username: string, password: string, database?: string) => {
-    const driver = createDriver(scheme, host, port, username, password)
-    const config = { scheme, host, port, username, password, database } as Neo4jConfig
-
-    return ({ children }) => {
-        return (
-            <Neo4jContext.Provider value={{ driver, config }}>
-                {children}
-            </Neo4jContext.Provider>
-        )
-    }
-}
-
+export const useCypherRead = (cypher: string, params?: Record<string, any>, database?: string) : Neo4jResultState => useCypher(neo4j.session.READ, cypher, params, database)
+export const useCypherWrite = (cypher: string, params?: Record<string, any>, database?: string) : Neo4jResultState => useCypher(neo4j.session.WRITE, cypher, params, database)

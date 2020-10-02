@@ -16,7 +16,6 @@ Otherwise display a login form and if supplied default the following values into
 - `database`
 
 
-
 ```tsx
 import { Neo4jAppProvider } from './neo4j'
 
