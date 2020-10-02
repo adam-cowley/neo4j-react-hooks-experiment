@@ -17,14 +17,13 @@ Otherwise display a login form and if supplied default the following values into
 
 
 ```tsx
-import { Neo4jAppProvider } from './neo4j'
+import { Neo4jProvider } from './neo4j'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Neo4jAppProvider host="foo" password="bar">
-      {/* <div>hi</div> */}
+    <Neo4jProvider host="foo">
       <App />
-    </Neo4jAppProvider>
+    </Neo4jProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

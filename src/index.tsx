@@ -5,19 +5,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// import { createDriver, createNeo4jContext, Neo4jContext } from './neo4j/index'
+import { Neo4jProvider, createDriver } from 'use-neo4j'
 
-// const driver = createDriver('bolt', 'localhost', 7687, 'neo4j', 'neo')
-
-// const Neo4jApp = createNeo4jContext('bolt', 'localhost', 7687, 'neo4j', 'neo')
-
-import { Neo4jProvider } from './neo4j/app'
+const driver = createDriver('neo4j', 'localhost', 7687, 'neo4j', 'neo')
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Neo4jProvider host="foo">
-      {/* <div>hi</div> */}
+    <Neo4jProvider driver={driver}>
       <App />
     </Neo4jProvider>
   </React.StrictMode>,

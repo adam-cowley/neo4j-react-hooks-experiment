@@ -1,11 +1,10 @@
 import React from 'react';
 import './App.css';
 
-import { useCypherRead } from './neo4j'
-
+import { useReadCypher } from 'use-neo4j'
 
 function App() {
-  const { loading, first, cypher } = useCypherRead('MATCH (n) RETURN count(n) AS count')
+  const { loading, first, cypher } = useReadCypher('MATCH (n) RETURN count(n) AS count')
   const count = first && first.get('count').toNumber()
 
   return (
